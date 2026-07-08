@@ -1,0 +1,39 @@
+name: Durham Bulls Weekly Digest
+
+on:
+  schedule:
+    # 16:00 UTC = 12:00 PM (noon) Eastern Daylight Time (summer).
+    # During Eastern Standard Time (winter) this runs at 11:00 AM ET instead.
+    # Adjust if you want an exact local time year-round.
+    - cron: "0 16 * * 0"  # Sundays
+  workflow_dispatch: {}  # lets you trigger it manually from the Actions tab
+
+permissions:
+  contents: write  # needed to commit the refreshed schedule file back to the repo
+
+concurrency:
+  group: durham-bulls-schedule-write
+  cancel-in-progress: false
+
+jobs:
+  weekly-digest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Refresh schedule database
+        run: python scripts/build_schedule.py
+
+      - name: Commit updated schedule if it changed
+        run: bash scripts/commit_schedule.sh
+
+      - name: Post weekly digest to Slack
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: python scripts/weekly_digest.py
