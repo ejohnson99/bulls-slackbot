@@ -49,4 +49,41 @@ def week_bounds(today):
 def format_game_line(game: dict) -> str:
     dt = datetime.strptime(f"{game['date']} {game['time']}", "%Y-%m-%d %H:%M")
     weekday = dt.strftime("%A")
-    date_part =
+    date_part = f"{dt.month}/{dt.day}"
+    time_part = dt.strftime("%-I:%M %p").lower()
+    dh_note = (
+        f" (Game {game['game_number']})" if game.get("game_number", 1) > 1 else ""
+    )
+    return f"{weekday} {date_part} {time_part} - vs. {game['opponent']}{dh_note}"
+
+
+def main() -> None:
+    webhook_url = os.environ.get("SLACK_WEBHOOK_URL")
+    if not webhook_url:
+        print("SLACK_WEBHOOK_URL environment variable is not set.", file=sys.stderr)
+        sys.exit(1)
+
+    games = load_games()
+
+    today = datetime.now(EASTERN).date()
+    sunday, saturday = week_bounds(today)
+
+    weeks_games = [
+        g
+        for g in games
+        if sunday <= datetime.strptime(g["date"], "%Y-%m-%d").date() <= saturday
+    ]
+    weeks_games.sort(key=lambda g: (g["date"], g["time"]))
+
+    if not weeks_games:
+        text = "No home games this week"
+    else:
+        lines = [format_game_line(g) for g in weeks_games]
+        text = "Home Games this Week:\n" + "\n".join(lines)
+
+    post_to_slack(webhook_url, text)
+    print(text)
+
+
+if __name__ == "__main__":
+    main()
