@@ -1,0 +1,39 @@
+name: Durham Bulls Game Notifier
+
+on:
+  schedule:
+    # 13:00 UTC = 9:00 AM Eastern Daylight Time (summer).
+    # During Eastern Standard Time (winter) this runs at 8:00 AM ET instead.
+    # Adjust if you want an exact local time year-round.
+    - cron: "0 13 * * *"
+  workflow_dispatch: {}  # lets you trigger it manually from the Actions tab
+
+permissions:
+  contents: write  # needed to commit the refreshed schedule file back to the repo
+
+concurrency:
+  group: durham-bulls-schedule-write
+  cancel-in-progress: false
+
+jobs:
+  update-and-notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Refresh schedule database
+        run: python scripts/build_schedule.py
+
+      - name: Commit updated schedule if it changed
+        run: bash scripts/commit_schedule.sh
+
+      - name: Check for a game today and notify Slack
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: python scripts/notify_slack.py
