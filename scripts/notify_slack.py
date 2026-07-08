@@ -1,5 +1,5 @@
 """
-Checks data/home_games.json for a Durham Bulls home game tomorrow
+Checks data/home_games.json for a Durham Bulls home game today
 (America/New_York time) and, if one exists, posts a message to Slack
 via an Incoming Webhook.
 
@@ -10,7 +10,7 @@ import json
 import os
 import sys
 import urllib.request
-from datetime import datetime, timedelta
+from datetime import datetime
 from zoneinfo import ZoneInfo
 
 DB_PATH = "data/home_games.json"
@@ -44,19 +44,18 @@ def main() -> None:
     games = load_games()
 
     today_eastern = datetime.now(EASTERN).date()
-    tomorrow = today_eastern + timedelta(days=1)
-    tomorrow_str = tomorrow.strftime("%Y-%m-%d")
+    today_str = today_eastern.strftime("%Y-%m-%d")
 
-    tomorrows_games = [g for g in games if g["date"] == tomorrow_str]
+    todays_games = [g for g in games if g["date"] == today_str]
 
-    if not tomorrows_games:
-        print(f"No Durham Bulls home game on {tomorrow_str}. Nothing to post.")
+    if not todays_games:
+        print(f"No Durham Bulls home game today ({today_str}). Nothing to post.")
         return
 
-    pretty_date = tomorrow.strftime("%A, %B %-d")
+    pretty_date = today_eastern.strftime("%A, %B %-d")
 
-    for game in tomorrows_games:
-        header = ":baseball: *Durham Bulls game tomorrow!*"
+    for game in todays_games:
+        header = ":baseball: *Durham Bulls game today!*"
         dh_note = (
             f" (Game {game['game_number']} of a doubleheader)"
             if game.get("game_number", 1) > 1
