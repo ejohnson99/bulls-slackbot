@@ -40,7 +40,7 @@ jobs:
           else
             git commit -m "Update Durham Bulls schedule"
             git pull --rebase origin main
-            git push
+            git push origin main
 
       - name: Post weekly digest to Slack
         env:
