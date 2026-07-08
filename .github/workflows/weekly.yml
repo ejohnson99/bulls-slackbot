@@ -41,6 +41,7 @@ jobs:
             git commit -m "Update Durham Bulls schedule"
             git pull --rebase origin main
             git push origin main
+          fi
 
       - name: Post weekly digest to Slack
         env:
