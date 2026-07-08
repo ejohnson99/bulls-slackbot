@@ -11,6 +11,10 @@ on:
 permissions:
   contents: write  # needed to commit the refreshed schedule file back to the repo
 
+concurrency:
+  group: durham-bulls-schedule-write
+  cancel-in-progress: false
+
 jobs:
   update-and-notify:
     runs-on: ubuntu-latest
