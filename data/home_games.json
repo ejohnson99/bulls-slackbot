@@ -495,13 +495,22 @@
     "game_number": 1
   },
   {
+    "game_pk": 816704,
+    "date": "2026-08-01",
+    "time": "13:05",
+    "time_display": "1:05 PM ET",
+    "opponent": "Gwinnett Stripers",
+    "status": "Scheduled",
+    "game_number": 1
+  },
+  {
     "game_pk": 816697,
     "date": "2026-08-01",
     "time": "18:45",
     "time_display": "6:45 PM ET",
     "opponent": "Gwinnett Stripers",
     "status": "Scheduled",
-    "game_number": 1
+    "game_number": 2
   },
   {
     "game_pk": 816693,
