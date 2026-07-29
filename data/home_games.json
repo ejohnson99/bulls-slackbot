@@ -464,17 +464,26 @@
     "time": "18:45",
     "time_display": "6:45 PM ET",
     "opponent": "Gwinnett Stripers",
-    "status": "Scheduled",
+    "status": "Postponed",
     "game_number": 1
   },
   {
     "game_pk": 816699,
     "date": "2026-07-29",
-    "time": "18:45",
-    "time_display": "6:45 PM ET",
+    "time": "17:30",
+    "time_display": "5:30 PM ET",
     "opponent": "Gwinnett Stripers",
     "status": "Scheduled",
     "game_number": 1
+  },
+  {
+    "game_pk": 816698,
+    "date": "2026-07-29",
+    "time": "17:35",
+    "time_display": "5:35 PM ET",
+    "opponent": "Gwinnett Stripers",
+    "status": "Scheduled",
+    "game_number": 2
   },
   {
     "game_pk": 816703,
